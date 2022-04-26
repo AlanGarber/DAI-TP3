@@ -24,8 +24,8 @@ export class PersonajeService {
         const response = await pool.request()
             .input('Imagen',sql.VarChar, personaje?.Imagen ?? '')
             .input('Nombre',sql.VarChar, personaje?.Nombre ?? '')
-            .input('Edad',sql.int, personaje?.Edad ?? 0)
-            .input('Peso',sql.int, personaje?.Peso ?? 0)
+            .input('Edad',sql.Int, personaje?.Edad ?? 0)
+            .input('Peso',sql.Int, personaje?.Peso ?? 0)
             .input('Historia',sql.VarChar, personaje?.Historia ?? '')
             .input('Apellido',sql.VarChar, personaje?.Apellido ?? '')
             .query(`INSERT INTO ${personajeTabla}(Imagen, Nombre, Edad, Peso, Historia, Apellido) VALUES (@Imagen, @Nombre, @Edad, @Peso, @Historia, @Apellido)`);

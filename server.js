@@ -1,12 +1,15 @@
-import express from 'express'
-import PersonajeController from './src/controllers/personajeController.js'
+import express from "express";
+import cors from "cors";
+import PersonajeRouter from "./src/controllers/personajeController.js";
 
-const server = express();
-const puerto = 2548;
+const app = express();
+const port = 5000;
 
-server.use(express.json());
-server.use('/personaje',PersonajeController);
+app.use(cors());
+app.use(express.json());
 
-server.listen(puerto, () => {
-    console.log(`This is a server on the port ${puerto}`);
-})
+app.use("/personaje", PersonajeRouter);
+
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`);
+});
