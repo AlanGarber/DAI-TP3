@@ -28,6 +28,30 @@ export class PersonajeService {
         return response.recordset[0];
     }
 
+    getPersonajeByNombre = async (nombre) => {
+        console.log('This is a function on the service');
+
+        const pool = await sql.connect(config);
+        const response = await pool.request()
+            .input('nombre',sql.VarChar, nombre)
+            .query(`SELECT * from ${personajeTabla} where Nombre = @nombre`);
+        console.log(response)
+
+        return response.recordset[0];
+    }
+
+    getPersonajeByEdad = async (edad) => {
+        console.log('This is a function on the service');
+
+        const pool = await sql.connect(config);
+        const response = await pool.request()
+            .input('edad',sql.Int, edad)
+            .query(`SELECT * from ${personajeTabla} where Edad = @edad`);
+        console.log(response)
+
+        return response.recordset[0];
+    }
+
 
     createPersonaje = async (personaje) => {
         console.log('This is a function on the service');
@@ -70,7 +94,7 @@ export class PersonajeService {
         const pool = await sql.connect(config);
         const response = await pool.request()
             .input('id',sql.Int, id)
-            .query(`DELETE FROM ${personajeTabla} WHERE id = @id`);
+            .query(`DELETE FROM ${personajeTabla} WHERE idPersonaje = @id`);
         console.log(response)
 
         return response.recordset;
