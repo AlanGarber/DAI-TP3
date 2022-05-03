@@ -1,16 +1,32 @@
 import sql from 'mssql'
 import config from '../../db.js'
 import 'dotenv/config'
+import { parse } from 'dotenv';
 
 const personajeTabla=process.env.DB_TABLA_PERSONAJE;
 
 export class PersonajeService {
 
-    getAllPersonaje = async () => {
+    getAllPersonaje = async (nombre,edad) => {
         console.log('This is a function on the service');
-
         const pool = await sql.connect(config);
-        const response = await pool.request().query(`SELECT * from ${personajeTabla}`);
+        let response = 0;
+
+        if(edad!=undefined){
+             response = await pool.request()
+                .input('edad',sql.Int, edad)
+                .query(`SELECT * from ${personajeTabla} WHERE Edad=@edad`);
+        }
+        else if(nombre!=undefined){
+            response = await pool.request()
+                .input('nombre',sql.VarChar, nombre)
+                .query(`SELECT * from ${personajeTabla} WHERE Nombre=@nombre`);
+        }
+        else{
+            response = await pool.request()
+                .query(`SELECT * from ${personajeTabla}`);
+        }
+
         console.log(response)
 
         return response.recordset;
