@@ -1,4 +1,1 @@
-express
-mssql
-cors
-dotenv
+npm i express mssql cors dotenv passport passport-jwt

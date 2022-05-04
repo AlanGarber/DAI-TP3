@@ -12,12 +12,18 @@ export class PersonajeService {
         const pool = await sql.connect(config);
         let response = 0;
 
-        if(edad!=undefined){
+        if(nombre && edad){
+            response = await pool.request()
+                .input('edad',sql.Int, edad)
+                .input('nombre',sql.VarChar, nombre)
+                .query(`SELECT * from ${personajeTabla} WHERE Edad=@edad AND Nombre=@nombre`);
+        }
+        else if(edad){
              response = await pool.request()
                 .input('edad',sql.Int, edad)
                 .query(`SELECT * from ${personajeTabla} WHERE Edad=@edad`);
         }
-        else if(nombre!=undefined){
+        else if(nombre){
             response = await pool.request()
                 .input('nombre',sql.VarChar, nombre)
                 .query(`SELECT * from ${personajeTabla} WHERE Nombre=@nombre`);
