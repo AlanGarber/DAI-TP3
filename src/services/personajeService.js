@@ -47,19 +47,20 @@ export class PersonajeService {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
-        let response = await pool.request()
+        const response = await pool.request()
                 .input('id',sql.Int, id)
                 .query(`SELECT m.* 
-                        FROM ${personajeXPeliculaTabla} pp, ${peliculaTabla} m, ${personajeTabla} p 
-                        WHERE pp.idPersonaje=@id and pp.idPelicula=m.idPelicula `);
-        const helper = await pool.request()
+                        FROM ${peliculaTabla} m , ${personajeTabla} p, ${personajeXPeliculaTabla} pp 
+                        WHERE m.idPelicula = pp.idPelicula and p.idPersonaje = pp.idPersonaje`);
+        let helper = await pool.request()
                 .input('id',sql.Int, id)
                 .query(`SELECT p.* 
                         ${personajeTabla} p 
                         WHERE p.idPersonaje=@id`);
         console.log(response)
 
-        return response.recordset[0];
+        helper.recordset[0].movies=response.recordset;
+        return helper.recordset[0];
     }
 
     getPersonajeByNombre = async (nombre) => {
