@@ -1,55 +1,53 @@
 import { Router } from 'express';
-import { PersonajeService } from '../services/personajeService.js';
+import { PeliculaService } from '../services/peliculaService.js';
 import { Authenticate } from '../common/jwt.js';
 
-
 const router = Router();
-const personajeService = new PersonajeService();
+const peliculaService = new PeliculaService();
 
 router.get('/', Authenticate, async (req, res) => {
     console.log(`This is a get operation`);
-    let nombre=req.query.nombre
-    let edad=req.query.edad
-    let Movie=req.query.Movie 
+    let Titulo=req.query.Titulo
+    let Orden=req.query.Orden
 
-    const personajes = await personajeService.getAllPersonaje(nombre,edad,Movie);
+    const peliculas = await peliculaService.getAllPelicula(Titulo, Orden);
   
-    return res.status(200).json(personajes);
+    return res.status(200).json(peliculas);
   });
 
 router.get('/:id', Authenticate, async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a get operation`);
 
-  const personaje = await personajeService.getPersonajeById(req.params.id);
+  const pelicula = await peliculaService.getPeliculaById(req.params.id);
 
-  return res.status(200).json(personaje);
+  return res.status(200).json(pelicula);
 });
 
 router.post('', Authenticate, async (req, res) => {
   console.log(`This is a post operation`);
 
-  const personaje = await personajeService.createPersonaje(req.body);
+  const pelicula = await peliculaService.createPelicula(req.body);
 
-  return res.status(201).json(personaje);
+  return res.status(201).json(pelicula);
 });
 
 router.put('/:id', Authenticate, async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a put operation`);
 
-  const personaje = await personajeService.updatePersonajeById(req.params.id, req.body);
+  const pelicula = await peliculaService.updatePeliculaById(req.params.id, req.body);
 
-  return res.status(200).json(personaje);
+  return res.status(200).json(pelicula);
 });
 
 router.delete('/:id', Authenticate, async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a delete operation`);
 
-  const personaje = await personajeService.deletePersonajeById(req.params.id);
+  const pelicula = await peliculaService.deletePeliculaById(req.params.id);
 
-  return res.status(200).json(personaje);
+  return res.status(200).json(pelicula);
 });
 
 export default router;

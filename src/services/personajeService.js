@@ -4,10 +4,12 @@ import 'dotenv/config'
 import { parse } from 'dotenv';
 
 const personajeTabla=process.env.DB_TABLA_PERSONAJE;
+const personajeXPeliculaTabla=process.env.DB_TABLA_PxP;
+const peliculaTabla=process.env.DB_TABLA_PELICULA;
 
 export class PersonajeService {
 
-    getAllPersonaje = async (nombre,edad) => {
+    getAllPersonaje = async (nombre,edad,Movie) => {
         console.log('This is a function on the service');
         const pool = await sql.connect(config);
         let response = 0;
@@ -28,6 +30,9 @@ export class PersonajeService {
                 .input('nombre',sql.VarChar, nombre)
                 .query(`SELECT * from ${personajeTabla} WHERE Nombre=@nombre`);
         }
+        else if(Movie){
+
+        }
         else{
             response = await pool.request()
                 .query(`SELECT * from ${personajeTabla}`);
@@ -42,9 +47,16 @@ export class PersonajeService {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
-        const response = await pool.request()
-            .input('id',sql.Int, id)
-            .query(`SELECT * from ${personajeTabla} where idPersonaje = @id`);
+        let response = await pool.request()
+                .input('id',sql.Int, id)
+                .query(`SELECT m.* 
+                        FROM ${personajeXPeliculaTabla} pp, ${peliculaTabla} m, ${personajeTabla} p 
+                        WHERE pp.idPersonaje=@id and pp.idPelicula=m.idPelicula `);
+        const helper = await pool.request()
+                .input('id',sql.Int, id)
+                .query(`SELECT p.* 
+                        ${personajeTabla} p 
+                        WHERE p.idPersonaje=@id`);
         console.log(response)
 
         return response.recordset[0];
