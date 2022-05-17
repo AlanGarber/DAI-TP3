@@ -11,8 +11,9 @@ router.get('/', Authenticate, async (req, res) => {
     let nombre=req.query.nombre
     let edad=req.query.edad
     let Movie=req.query.Movie 
+    let peso=req.query.peso 
 
-    const personajes = await personajeService.getAllPersonaje(nombre,edad,Movie);
+    const personajes = await personajeService.getAllPersonaje(nombre,edad,Movie,peso);
   
     return res.status(200).json(personajes);
   });

@@ -9,35 +9,49 @@ const peliculaTabla=process.env.DB_TABLA_PELICULA;
 
 export class PersonajeService {
 
-    getAllPersonaje = async (nombre,edad,Movie) => {
+    getAllPersonaje = async (nombre,edad,movie,peso) => {
         console.log('This is a function on the service');
+        let ifWhere=false;
+        let Query=`SELECT p.idPersonaje, p.Nombre, p.Imagen from ${personajeTabla} p, ${personajeXPeliculaTabla} pp `;
+        if(nombre){
+            if(ifWhere){
+                Query+=" AND Nombre=@nombre";
+            }else{
+                Query+=`WHERE Nombre=@nombre`;
+                ifWhere=true;
+            }
+        }
+        if(edad){
+            if(ifWhere){
+                Query+=" AND Edad=@edad";
+            }else{
+                Query+=`WHERE Edad=@edad`;
+                ifWhere=true;
+            }
+        }
+        if(peso){
+            if(ifWhere){
+                Query+=" AND Peso=@peso";
+            }else{
+                Query+=`WHERE Peso=@peso`;
+                ifWhere=true;
+            }
+        }
+        if(movie){
+            if(ifWhere){
+                Query+=" AND Peso=@peso";
+            }else{
+                Query+=`WHERE pp.idPelicula=@movie`;
+                ifWhere=true;
+            }
+        }
         const pool = await sql.connect(config);
-        let response = 0;
-
-        if(nombre && edad){
-            response = await pool.request()
-                .input('edad',sql.Int, edad)
+        const response = await pool.request()
                 .input('nombre',sql.VarChar, nombre)
-                .query(`SELECT * from ${personajeTabla} WHERE Edad=@edad AND Nombre=@nombre`);
-        }
-        else if(edad){
-             response = await pool.request()
                 .input('edad',sql.Int, edad)
-                .query(`SELECT * from ${personajeTabla} WHERE Edad=@edad`);
-        }
-        else if(nombre){
-            response = await pool.request()
-                .input('nombre',sql.VarChar, nombre)
-                .query(`SELECT * from ${personajeTabla} WHERE Nombre=@nombre`);
-        }
-        else if(Movie){
-
-        }
-        else{
-            response = await pool.request()
-                .query(`SELECT * from ${personajeTabla}`);
-        }
-
+                .input('peso',sql.Int, peso)
+                .input('movie',sql.Int, movie)
+                .query(Query);
         console.log(response)
 
         return response.recordset;
@@ -49,15 +63,11 @@ export class PersonajeService {
         const pool = await sql.connect(config);
         const response = await pool.request()
                 .input('id',sql.Int, id)
-                .query(`SELECT m.* 
-                        FROM ${peliculaTabla} m , ${personajeTabla} p, ${personajeXPeliculaTabla} pp 
-                        WHERE m.idPelicula = pp.idPelicula and p.idPersonaje = pp.idPersonaje`);
+                .query(`SELECT m.* FROM ${peliculaTabla} m, ${personajeTabla} p, ${personajeXPeliculaTabla} pp WHERE m.idPelicula = pp.idPelicula and p.idPersonaje = pp.idPersonaje and p.idPersonaje=@id`);
         let helper = await pool.request()
                 .input('id',sql.Int, id)
-                .query(`SELECT p.* 
-                        ${personajeTabla} p 
-                        WHERE p.idPersonaje=@id`);
-        console.log(response)
+                .query(`SELECT p.* FROM ${personajeTabla} p WHERE p.idPersonaje=@id`);
+        console.log(helper);
 
         helper.recordset[0].movies=response.recordset;
         return helper.recordset[0];
