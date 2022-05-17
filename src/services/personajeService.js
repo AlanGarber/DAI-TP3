@@ -9,15 +9,15 @@ const peliculaTabla=process.env.DB_TABLA_PELICULA;
 
 export class PersonajeService {
 
-    getAllPersonaje = async (nombre,edad,movie,peso) => {
+    getAllCharacter = async (nombre,edad,movie,peso) => {
         console.log('This is a function on the service');
         let ifWhere=false;
         let Query=`SELECT p.idPersonaje, p.Nombre, p.Imagen from ${personajeTabla} p, ${personajeXPeliculaTabla} pp `;
         if(nombre){
             if(ifWhere){
-                Query+=" AND Nombre=@nombre";
+                Query+="AND Nombre=@nombre";
             }else{
-                Query+=`WHERE Nombre=@nombre`;
+                Query+=`WHERE Nombre=@nombre `;
                 ifWhere=true;
             }
         }
@@ -31,20 +31,21 @@ export class PersonajeService {
         }
         if(peso){
             if(ifWhere){
-                Query+=" AND Peso=@peso";
+                Query+="AND Peso=@peso";
             }else{
-                Query+=`WHERE Peso=@peso`;
+                Query+=`WHERE Peso=@peso `;
                 ifWhere=true;
             }
         }
         if(movie){
             if(ifWhere){
-                Query+=" AND Peso=@peso";
+                Query+="AND pp.idPelicula=@movie";
             }else{
-                Query+=`WHERE pp.idPelicula=@movie`;
+                Query+=`WHERE pp.idPelicula=@movie `;
                 ifWhere=true;
             }
         }
+        try{
         const pool = await sql.connect(config);
         const response = await pool.request()
                 .input('nombre',sql.VarChar, nombre)
@@ -52,12 +53,15 @@ export class PersonajeService {
                 .input('peso',sql.Int, peso)
                 .input('movie',sql.Int, movie)
                 .query(Query);
+            }catch{
+                console.log(error);
+            }
         console.log(response)
 
         return response.recordset;
     }
 
-    getPersonajeById = async (id) => {
+    getCharacterById = async (id) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
@@ -73,7 +77,7 @@ export class PersonajeService {
         return helper.recordset[0];
     }
 
-    getPersonajeByNombre = async (nombre) => {
+    getCharacterByNombre = async (nombre) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
@@ -85,7 +89,7 @@ export class PersonajeService {
         return response.recordset[0];
     }
 
-    getPersonajeByEdad = async (edad) => {
+    getCharacterByEdad = async (edad) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
@@ -98,7 +102,7 @@ export class PersonajeService {
     }
 
 
-    createPersonaje = async (personaje) => {
+    createCharacter = async (personaje) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
@@ -115,7 +119,7 @@ export class PersonajeService {
         return response.recordset;
     }
 
-    updatePersonajeById = async (id, personaje) => {
+    updateCharacterById = async (id, personaje) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
@@ -133,7 +137,7 @@ export class PersonajeService {
         return response.recordset;
     }
 
-    deletePersonajeById = async (id) => {
+    deleteCharacterById = async (id) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);

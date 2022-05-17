@@ -9,14 +9,14 @@ const personajeTabla=process.env.DB_TABLA_PERSONAJE;
 
 export class PeliculaService {
 
-    getAllPelicula = async (Titulo, Orden, Character) => {
+    getAllMovies = async (Titulo, Orden, Character) => {
         console.log('This is a function on the service');
         const pool = await sql.connect(config);
         let response = 0;
 
         if(Orden){
             response = await pool.request()
-                .query(`SELECT IdPelicula, Peliculas.Imagen, Peliculas.Titulo, Peliculas.FechaCreacion 
+                .query(`SELECT IdPelicula, Imagen, Titulo, FechaCreacion 
                         FROM ${peliculaTabla}
                         ORDER BY Peliculas.Titulo ${Orden}`);
         }
@@ -37,7 +37,7 @@ export class PeliculaService {
         return response.recordset;
     }
 
-    getPeliculaById = async (id) => {
+    getMovieById = async (id) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
@@ -51,7 +51,7 @@ export class PeliculaService {
         return response.recordset[0];
     }
 
-    getPeliculaByTitulo = async (Titulo) => {
+    getMovieByTitulo = async (Titulo) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
@@ -65,7 +65,7 @@ export class PeliculaService {
         return response.recordset[0];
     }
 
-    createPelicula = async (pelicula) => {
+    createMovie = async (pelicula) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
@@ -80,7 +80,7 @@ export class PeliculaService {
         return response.recordset;
     }
 
-    updatePeliculaById = async (id, pelicula) => {
+    updateMovieById = async (id, pelicula) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
@@ -96,7 +96,7 @@ export class PeliculaService {
         return response.recordset;
     }
 
-    deletePeliculaById = async (id) => {
+    deleteMovieById = async (id) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);

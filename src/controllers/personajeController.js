@@ -13,7 +13,7 @@ router.get('/', Authenticate, async (req, res) => {
     let Movie=req.query.Movie 
     let peso=req.query.peso 
 
-    const personajes = await personajeService.getAllPersonaje(nombre,edad,Movie,peso);
+    const personajes = await personajeService.getAllCharacter(nombre,edad,Movie,peso);
   
     return res.status(200).json(personajes);
   });
@@ -22,7 +22,7 @@ router.get('/:id', Authenticate, async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a get operation`);
 
-  const personaje = await personajeService.getPersonajeById(req.params.id);
+  const personaje = await personajeService.getCharacterById(req.params.id);
 
   return res.status(200).json(personaje);
 });
@@ -30,7 +30,7 @@ router.get('/:id', Authenticate, async (req, res) => {
 router.post('', Authenticate, async (req, res) => {
   console.log(`This is a post operation`);
 
-  const personaje = await personajeService.createPersonaje(req.body);
+  const personaje = await personajeService.createCharacter(req.body);
 
   return res.status(201).json(personaje);
 });
@@ -39,7 +39,7 @@ router.put('/:id', Authenticate, async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a put operation`);
 
-  const personaje = await personajeService.updatePersonajeById(req.params.id, req.body);
+  const personaje = await personajeService.updateCharacterById(req.params.id, req.body);
 
   return res.status(200).json(personaje);
 });
@@ -48,7 +48,7 @@ router.delete('/:id', Authenticate, async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a delete operation`);
 
-  const personaje = await personajeService.deletePersonajeById(req.params.id);
+  const personaje = await personajeService.deleteCharacterById(req.params.id);
 
   return res.status(200).json(personaje);
 });
