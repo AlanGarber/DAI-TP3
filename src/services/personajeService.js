@@ -11,51 +11,26 @@ export class PersonajeService {
 
     getAllCharacter = async (nombre,edad,movie,peso) => {
         console.log('This is a function on the service');
-        let ifWhere=false;
-        let Query=`SELECT p.idPersonaje, p.Nombre, p.Imagen from ${personajeTabla} p, ${personajeXPeliculaTabla} pp `;
+        let Query=`SELECT p.idPersonaje, p.Nombre, p.Imagen from ${personajeTabla} p, ${personajeXPeliculaTabla} pp WHERE p.IdPersonaje=pp.IdPersonaje`;
         if(nombre){
-            if(ifWhere){
-                Query+="AND Nombre=@nombre";
-            }else{
-                Query+=`WHERE Nombre=@nombre `;
-                ifWhere=true;
-            }
+            Query+=" AND Nombre=@nombre";
         }
         if(edad){
-            if(ifWhere){
-                Query+=" AND Edad=@edad";
-            }else{
-                Query+=`WHERE Edad=@edad`;
-                ifWhere=true;
-            }
+            Query+=" AND Edad=@edad";
         }
         if(peso){
-            if(ifWhere){
-                Query+="AND Peso=@peso";
-            }else{
-                Query+=`WHERE Peso=@peso `;
-                ifWhere=true;
-            }
+            Query+=" AND Peso=@peso";
         }
         if(movie){
-            if(ifWhere){
-                Query+="AND pp.idPelicula=@movie";
-            }else{
-                Query+=`WHERE pp.idPelicula=@movie `;
-                ifWhere=true;
-            }
+            Query+=" AND pp.idPelicula=@movie";
         }
-        try{
         const pool = await sql.connect(config);
         const response = await pool.request()
-                .input('nombre',sql.VarChar, nombre)
-                .input('edad',sql.Int, edad)
-                .input('peso',sql.Int, peso)
-                .input('movie',sql.Int, movie)
-                .query(Query);
-            }catch{
-                console.log(error);
-            }
+            .input('nombre',sql.VarChar, nombre)
+            .input('edad',sql.Int, edad)
+            .input('peso',sql.Int, peso)
+            .input('movie',sql.Int, movie)
+            .query(Query);            
         console.log(response)
 
         return response.recordset;
@@ -76,31 +51,6 @@ export class PersonajeService {
         helper.recordset[0].movies=response.recordset;
         return helper.recordset[0];
     }
-
-    getCharacterByNombre = async (nombre) => {
-        console.log('This is a function on the service');
-
-        const pool = await sql.connect(config);
-        const response = await pool.request()
-            .input('nombre',sql.VarChar, nombre)
-            .query(`SELECT * from ${personajeTabla} where Nombre = @nombre`);
-        console.log(response)
-
-        return response.recordset[0];
-    }
-
-    getCharacterByEdad = async (edad) => {
-        console.log('This is a function on the service');
-
-        const pool = await sql.connect(config);
-        const response = await pool.request()
-            .input('edad',sql.Int, edad)
-            .query(`SELECT * from ${personajeTabla} where Edad = @edad`);
-        console.log(response)
-
-        return response.recordset[0];
-    }
-
 
     createCharacter = async (personaje) => {
         console.log('This is a function on the service');

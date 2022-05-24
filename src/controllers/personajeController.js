@@ -10,10 +10,10 @@ router.get('/', Authenticate, async (req, res) => {
     console.log(`This is a get operation`);
     let nombre=req.query.nombre
     let edad=req.query.edad
-    let Movie=req.query.Movie 
+    let movie=req.query.Movie 
     let peso=req.query.peso 
 
-    const personajes = await personajeService.getAllCharacter(nombre,edad,Movie,peso);
+    const personajes = await personajeService.getAllCharacter(nombre,edad,movie,peso);
   
     return res.status(200).json(personajes);
   });
