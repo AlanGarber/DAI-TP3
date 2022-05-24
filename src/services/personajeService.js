@@ -11,7 +11,7 @@ export class PersonajeService {
 
     getAllCharacter = async (nombre,edad,movie,peso) => {
         console.log('This is a function on the service');
-        let Query=`SELECT p.idPersonaje, p.Nombre, p.Imagen from ${personajeTabla} p, ${personajeXPeliculaTabla} pp WHERE p.IdPersonaje=pp.IdPersonaje`;
+        let Query=`SELECT DISTINCT p.idPersonaje, p.Nombre, p.Imagen FROM ${personajeTabla} p, ${personajeXPeliculaTabla} pp WHERE p.IdPersonaje=pp.IdPersonaje`;
         if(nombre){
             Query+=" AND Nombre=@nombre";
         }
@@ -31,7 +31,7 @@ export class PersonajeService {
             .input('peso',sql.Int, peso)
             .input('movie',sql.Int, movie)
             .query(Query);            
-        console.log(response)
+        console.log(Query)
 
         return response.recordset;
     }
