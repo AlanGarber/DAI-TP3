@@ -30,8 +30,7 @@ export class PersonajeService {
             .input('edad',sql.Int, edad)
             .input('peso',sql.Int, peso)
             .input('movie',sql.Int, movie)
-            .query(Query);            
-        console.log(Query)
+            .query(Query);
 
         return response.recordset;
     }
@@ -46,8 +45,8 @@ export class PersonajeService {
         let helper = await pool.request()
                 .input('id',sql.Int, id)
                 .query(`SELECT p.* FROM ${personajeTabla} p WHERE p.idPersonaje=@id`);
-        console.log(helper);
-
+        
+        console.log(response)
         helper.recordset[0].movies=response.recordset;
         return helper.recordset[0];
     }

@@ -1,7 +1,6 @@
 import sql from 'mssql'
 import config from '../../db.js'
 import 'dotenv/config'
-import { parse } from 'dotenv';
 
 const peliculaTabla=process.env.DB_TABLA_PELICULA;
 const personajeXPeliculaTabla=process.env.DB_TABLA_PxP;
@@ -47,7 +46,6 @@ export class PeliculaService {
         let helper = await pool.request()
                 .input('id',sql.Int, id)
                 .query(`SELECT m.* FROM ${peliculaTabla} m WHERE m.idPelicula=@id`);
-        console.log(helper);
 
         helper.recordset[0].personajes=response.recordset;
         return helper.recordset[0];
