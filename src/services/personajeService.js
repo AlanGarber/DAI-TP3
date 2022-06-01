@@ -11,26 +11,56 @@ export class PersonajeService {
 
     getAllCharacter = async (nombre,edad,movie,peso) => {
         console.log('This is a function on the service');
-        let Query=`SELECT DISTINCT p.idPersonaje, p.Nombre, p.Imagen FROM ${personajeTabla} p, ${personajeXPeliculaTabla} pp WHERE p.IdPersonaje=pp.IdPersonaje`;
+        let where=false;
+        let QueryBase=`SELECT DISTINCT p.idPersonaje, p.Nombre, p.Imagen FROM ${personajeTabla} p`;
+        let querySub=``
+
         if(nombre){
-            Query+=" AND Nombre=@nombre";
+            if(where){
+                querySub+=" AND Nombre=@nombre";
+            }else{
+                where=true;
+                querySub+=" Nombre=@nombre";
+            }
         }
         if(edad){
-            Query+=" AND Edad=@edad";
+            if(where){
+                querySub+=" AND Edad=@edad";
+            }else{
+                where=true;
+                querySub+=" Edad=@edad"
+            }
         }
         if(peso){
-            Query+=" AND Peso=@peso";
+            if(where){
+                querySub+=" AND Peso=@peso";
+            }else{
+                where=true;
+                querySub+=" Peso=@peso"
+            }
         }
         if(movie){
-            Query+=" AND pp.idPelicula=@movie";
+            if(where){
+                querySub=`, ${personajeXPeliculaTabla} pp WHERE p.IdPersonaje=pp.IdPersonaje AND`+querySub;
+            }else{
+                querySub=`, ${personajeXPeliculaTabla} pp WHERE p.IdPersonaje=pp.IdPersonaje `+querySub;
+            }
+            
+            querySub+= " AND pp.idPelicula=@movie"
         }
+        if(where && !movie){
+            QueryBase+=" WHERE" +querySub;
+        }else{
+            QueryBase+=querySub
+        }
+        console.log(QueryBase)
         const pool = await sql.connect(config);
         const response = await pool.request()
             .input('nombre',sql.VarChar, nombre)
             .input('edad',sql.Int, edad)
             .input('peso',sql.Int, peso)
             .input('movie',sql.Int, movie)
-            .query(Query);
+            .query(QueryBase);
 
         return response.recordset;
     }
