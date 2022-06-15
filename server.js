@@ -5,10 +5,14 @@ import PeliculaRouter from "./src/controllers/peliculaController.js";
 import AuthRouter from "./src/controllers/authController.js";
 import passport from 'passport';
 import { jwtStrategy } from './src/common/jwt.js';
+import swaggerUI from 'swagger-ui-express';
+import swaggerJsDoc from 'swagger-jsdoc';
 
 const app = express();
-const port = 3000;
+const port = 5000;
+const specs = swaggerJsDoc(options);
 
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use(cors());
 app.use(express.json());
 passport.use(jwtStrategy);
