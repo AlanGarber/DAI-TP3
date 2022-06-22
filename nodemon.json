@@ -1,0 +1,6 @@
+{
+    "nodemonConfig":{
+        "ignore":["node_modules"]
+    },
+    "exec":"node server.js"
+}
